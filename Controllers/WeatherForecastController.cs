@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LR2_Malyshok.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("[controller]")] //"api/[controller]"
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]

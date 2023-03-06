@@ -1,4 +1,4 @@
-namespace LR2_Malyshok
+ namespace LR2_Malyshok
 {
     public class WeatherForecast
     {

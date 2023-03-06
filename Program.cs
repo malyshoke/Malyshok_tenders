@@ -1,4 +1,7 @@
 
+using LR2_Malyshok.Models;
+using Microsoft.EntityFrameworkCore;
+
 namespace LR2_Malyshok
 {
     public class Program
@@ -7,6 +10,9 @@ namespace LR2_Malyshok
         {
             var builder = WebApplication.CreateBuilder(args);
 
+
+            builder.Services.AddDbContext<TendersDataContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("TendersDataContext")));
             // Add services to the container.
 
             builder.Services.AddControllers();

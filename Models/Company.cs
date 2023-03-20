@@ -11,6 +11,42 @@ namespace LR2_Malyshok.Models
         public string CompanyEmail { get; set; }
         public string CompanyPhone { get; set; }
         public  List<Tender> CompanyTenders { get; set; }
+        Tender Tender { get; set; }
         public  List<Tendering> CompanyTenderings { get; set; }
+        Tendering Tendering { get; set; }
+
+
+        public void AddTender(Tender tender)
+        {
+            CompanyTenders.Add(tender);
+        }
+
+        public void DeleteTender(Tender tender)
+        {
+            CompanyTenders.Remove(tender);
+        }
+
+        public void PartInTendering(Tendering tendering)
+        {
+            CompanyTenderings.Add(tendering);
+        }
+
+        public void CancelTendering(Tendering tendering)
+        {
+            CompanyTenderings.Remove(tendering);
+        }
+
+        public List<Tender> GetActiveTenders()
+        {
+            var activeTenders = new List<Tender>();
+            foreach (var tender in CompanyTenders)
+            {
+                if (tender.IsOpen())
+                {
+                    activeTenders.Add(tender);
+                }
+            }
+            return activeTenders;
+        }
     }
 }

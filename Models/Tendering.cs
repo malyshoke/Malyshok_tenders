@@ -7,11 +7,17 @@
         public int TenderId { get; set; }
         public int CompanyId { get; set; }
 
+        public void PlaceBet(float NewBid)
+        {
+            if (CurrentBid > NewBid)
+            {
+                CurrentBid = NewBid;
+            }
+            else
+            {
+                
+            }
+        }
 
-        //public int Bet(int bid)
-        //{
-        //    CurrentBid = bid;
-        //}
     }
-   
 }

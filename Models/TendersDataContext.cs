@@ -9,6 +9,7 @@ namespace LR2_Malyshok.Models
             public TendersDataContext(DbContextOptions<TendersDataContext> options)
                 : base(options)
             {
+            Database.EnsureCreated();
             }
 
             public DbSet<LR2_Malyshok.Models.Company> Company { get; set; } = default!;

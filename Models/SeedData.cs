@@ -48,8 +48,8 @@ namespace LR2_Malyshok.Models
                     {
                         TenderId = 1,
                         TenderName = "Lalal",
-                        TenderStartDate = DateTime.Parse("2023-06-03"),
-                        TenderEndDate = DateTime.Parse("2023-20-03"),
+                        TenderStart = DateTime.Parse("2023-06-03"),
+                        TenderEnd = DateTime.Parse("2023-20-03"),
                         TenderBudget = 100,
                         OwnerId = 1
                     }

@@ -10,10 +10,8 @@ namespace LR2_Malyshok.Models
         public string CompanyAddress { get; set; }
         public string CompanyEmail { get; set; }
         public string CompanyPhone { get; set; }
-        public  List<Tender> CompanyTenders { get; set; }
-        Tender Tender { get; set; }
-        public  List<Tendering> CompanyTenderings { get; set; }
-        Tendering Tendering { get; set; }
+        public virtual List<Tender> CompanyTenders { get; set; }
+        public virtual List<Tendering> CompanyTenderings { get; set; }
 
 
         public void AddTender(Tender tender)

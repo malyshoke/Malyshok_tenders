@@ -11,17 +11,8 @@ namespace LR2_Malyshok.Models
         public DateTime TenderEnd { get; set; }
         public float TenderBudget { get; set; }
         public int OwnerId { get; set; }
-        public List<Tendering> Tenderings { get; set; }
+        public virtual List<Tendering> Tenderings { get; set; }
 
-
-        public void CreateTender(string Name, DateTime Start, DateTime End, float Budget, int CompanyId)
-        {
-            TenderName = Name;
-            TenderStart = Start;
-            TenderEnd = End;
-            TenderBudget = Budget;
-            OwnerId = CompanyId;
-        }
 
         public int SelectWinner()
         {

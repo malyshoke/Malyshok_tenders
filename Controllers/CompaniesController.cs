@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LR2_Malyshok.Models;
+using static LR2_Malyshok.Models.DTOClasses;
 
 namespace LR2_Malyshok.Controllers
 {
@@ -33,7 +34,7 @@ namespace LR2_Malyshok.Controllers
 
         // GET: api/Companies/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Company>> GetCompany(int id)
+        public async Task<ActionResult<CompanyDto>> GetCompany(int id)
         {
           if (_context.Company == null)
           {
@@ -45,8 +46,8 @@ namespace LR2_Malyshok.Controllers
             {
                 return NotFound();
             }
-
-            return company;
+            CompanyDto companydto = (CompanyDto)company;
+            return companydto;
         }
 
         // PUT: api/Companies/5
@@ -94,6 +95,8 @@ namespace LR2_Malyshok.Controllers
 
             return CreatedAtAction("GetCompany", new { id = company.CompanyId }, company);
         }
+
+
 
         // DELETE: api/Companies/5
         [HttpDelete("{id}")]

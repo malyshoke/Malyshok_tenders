@@ -11,7 +11,7 @@ namespace LR2_Malyshok.Models
         public DateTime TenderEnd { get; set; }
         public float TenderBudget { get; set; }
         public int OwnerId { get; set; }
-        public virtual List<Tendering> Tenderings { get; set; }
+        public virtual ICollection<Tendering> Tenderings { get; set; }
 
 
         public int SelectWinner()

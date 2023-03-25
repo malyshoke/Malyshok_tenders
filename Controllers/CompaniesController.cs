@@ -83,19 +83,32 @@ namespace LR2_Malyshok.Controllers
 
         // POST: api/Companies
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPost]
+        //public async Task<ActionResult<Company>> PostCompany(Company company)
+        //{
+        //  if (_context.Company == null)
+        //  {
+        //      return Problem("Entity set 'TendersDataContext.Company'  is null.");
+        //  }
+        //    _context.Company.Add(company);
+        //    await _context.SaveChangesAsync();
+
+        //    return CreatedAtAction("GetCompany", new { id = company.CompanyId }, company);
+        //}
+
         [HttpPost]
-        public async Task<ActionResult<Company>> PostCompany(Company company)
+        public async Task<ActionResult<Company>> PostCompany(CompanyDto companydto)
         {
-          if (_context.Company == null)
-          {
-              return Problem("Entity set 'TendersDataContext.Company'  is null.");
-          }
+            if (_context.Company == null)
+            {
+                return Problem("Entity set 'TendersDataContext.Company'  is null.");
+            }
+            Company company = (Company)companydto;
             _context.Company.Add(company);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetCompany", new { id = company.CompanyId }, company);
         }
-
 
 
         // DELETE: api/Companies/5

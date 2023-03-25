@@ -1,4 +1,7 @@
-﻿using System.Security.Cryptography;
+﻿using System.Collections.Generic;
+using System.Security.Cryptography;
+using static LR2_Malyshok.Models.DTOClasses;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace LR2_Malyshok.Models
 {
@@ -10,8 +13,8 @@ namespace LR2_Malyshok.Models
         public string CompanyAddress { get; set; }
         public string CompanyEmail { get; set; }
         public string CompanyPhone { get; set; }
-        public  virtual List<Tender> CompanyTenders { get; set; }
-        public  virtual List<Tendering> CompanyTenderings { get; set; }
+        public ICollection<Tender> CompanyTenders { get; set; }
+        public ICollection<Tendering> CompanyTenderings { get; set; }
 
 
         public void AddTender(Tender tender)
@@ -45,6 +48,20 @@ namespace LR2_Malyshok.Models
                 }
             }
             return activeTenders;
+        }
+
+        public static explicit operator Company(DTOClasses.CompanyDto companydto)
+        {
+            Company comp = new Company();
+            comp.CompanyId = companydto.CompanyId;
+            comp.CompanyRating = companydto.CompanyRating;
+            comp.CompanyName = companydto.CompanyName;
+            comp.CompanyAddress = companydto.CompanyAddress;
+            comp.CompanyEmail = companydto.CompanyEmail;
+            comp.CompanyPhone = companydto.CompanyPhone;
+            List<Tender> CompanyTenders = new List<Tender>();
+            List<Tendering> CompanyTenderings = new List<Tendering>();
+            return comp;
         }
     }
 }

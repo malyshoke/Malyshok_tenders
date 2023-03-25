@@ -1,5 +1,6 @@
 ﻿using NuGet.Versioning;
 using System.Security.Cryptography;
+using static LR2_Malyshok.Models.DTOClasses;
 
 namespace LR2_Malyshok.Models
 {
@@ -34,5 +35,16 @@ namespace LR2_Malyshok.Models
             else return false;
         }
 
+        public static explicit operator Tender(TenderDto tenderdto)
+        {
+            Tender tender = new Tender();
+            tender.TenderId = tenderdto.TenderId;
+            tender.TenderName = tenderdto.TenderName;
+            tender.OwnerId= tenderdto.OwnerId;
+            tender.TenderStart = tenderdto.TenderStart;
+            tender.TenderBudget = tenderdto.TenderBudget;
+            ICollection<Tendering> Tenderings =  new List<Tendering>();
+            return tender;
+        }
     }
 }

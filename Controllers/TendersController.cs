@@ -83,12 +83,14 @@ namespace LR2_Malyshok.Controllers
         // POST: api/Tenders
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Tender>> PostTender(Tender tender)
+        public async Task<ActionResult<Tender>> PostTender(TenderDto tenderdto)
         {
           if (_context.Tender == null)
           {
               return Problem("Entity set 'TendersDataContext.Tender'  is null.");
           }
+          Tender tender = new Tender();
+            tender = (Tender)tenderdto;
             _context.Tender.Add(tender);
             await _context.SaveChangesAsync();
 

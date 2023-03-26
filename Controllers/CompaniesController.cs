@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using LR2_Malyshok.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using LR2_Malyshok.Models;
 using static LR2_Malyshok.Models.DTOClasses;
 
 namespace LR2_Malyshok.Controllers
@@ -25,10 +20,10 @@ namespace LR2_Malyshok.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Company>>> GetCompany()
         {
-          if (_context.Company == null)
-          {
-              return NotFound();
-          }
+            if (_context.Company == null)
+            {
+                return NotFound();
+            }
             return await _context.Company.ToListAsync();
         }
 
@@ -36,10 +31,10 @@ namespace LR2_Malyshok.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<CompanyDto>> GetCompany(int id)
         {
-          if (_context.Company == null)
-          {
-              return NotFound();
-          }
+            if (_context.Company == null)
+            {
+                return NotFound();
+            }
             var company = await _context.Company.FindAsync(id);
 
             if (company == null)
@@ -48,6 +43,64 @@ namespace LR2_Malyshok.Controllers
             }
             CompanyDto companydto = (CompanyDto)company;
             return companydto;
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<ActionResult<IEnumerable<Tender>>> GetCompanyTenders(int id)
+        {
+            var companyTenders = await _context.Tender.Where(t => t.OwnerId == id).ToListAsync();
+
+            if (companyTenders == null)
+            {
+                return NotFound();
+            }
+
+            return companyTenders;
+        }
+
+        [HttpGet]
+        [Route("{Name}")]
+        public async Task<ActionResult<IEnumerable<String>>> GetCompanyStartsWith(String name)
+        {
+            //var companyNames = await _context.Company.Where(c => c.CompanyName.StartsWith(name)).Select(c => c.CompanyName).ToListAsync();
+            var companyNames = await _context.Company.Where(c => c.CompanyName == name).Select(c => c.CompanyName).ToListAsync();
+
+            if (companyNames == null)
+            {
+                return NotFound();
+            }
+
+            return companyNames;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<String>>> GetCompanyNames()
+        {
+            var companyNames = await _context.Company
+                .Select(c => c.CompanyName)
+                .ToListAsync();
+
+            if (companyNames == null)
+            {
+                return NotFound();
+            }
+
+            return companyNames;
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<ActionResult<IEnumerable<Tendering>>> GetCompanyTenderings(int id)
+        {
+            var companyTenderings = await _context.Tendering.Where(t => t.CompanyId == id).ToListAsync();
+
+            if (companyTenderings == null)
+            {
+                return NotFound();
+            }
+
+            return companyTenderings;
         }
 
         // PUT: api/Companies/5
@@ -135,5 +188,6 @@ namespace LR2_Malyshok.Controllers
         {
             return (_context.Company?.Any(e => e.CompanyId == id)).GetValueOrDefault();
         }
+
     }
 }

@@ -17,7 +17,7 @@ namespace LR2_Malyshok.Models
 
         public int SelectWinner()
         {
-            if (Tenderings.Count == 0)
+            if (Tenderings.Count == 0 || Tenderings == null)
             {
                 return 0;
             }
@@ -30,7 +30,7 @@ namespace LR2_Malyshok.Models
 
         public bool IsOpen()
         {
-            if (DateTime.Now >= TenderStart && DateTime.Now <= TenderEnd)
+            if (DateTime.UtcNow >= TenderStart && DateTime.UtcNow <= TenderEnd)
             return true;
             else return false;
         }

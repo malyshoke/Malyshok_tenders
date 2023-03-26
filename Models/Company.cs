@@ -16,7 +16,11 @@ namespace LR2_Malyshok.Models
         public ICollection<Tender> CompanyTenders { get; set; }
         public ICollection<Tendering> CompanyTenderings { get; set; }
 
-
+        public Company()
+        {
+            CompanyTenders = new List<Tender>();
+            CompanyTenderings = new List<Tendering>();
+        }
         public void AddTender(Tender tender)
         {
             CompanyTenders.Add(tender);

@@ -61,10 +61,10 @@ namespace LR2_Malyshok.Controllers
 
         [HttpGet]
         [Route("{Name}")]
-        public async Task<ActionResult<IEnumerable<String>>> GetCompanyStartsWith(String name)
+        public async Task<ActionResult<IEnumerable<Company>>> GetCompanyStartsWith(String name)
         {
             //var companyNames = await _context.Company.Where(c => c.CompanyName.StartsWith(name)).Select(c => c.CompanyName).ToListAsync();
-            var companyNames = await _context.Company.Where(c => c.CompanyName == name).Select(c => c.CompanyName).ToListAsync();
+            var companyNames = await _context.Company.Where(c => c.CompanyName == name).ToListAsync();
 
             if (companyNames == null)
             {

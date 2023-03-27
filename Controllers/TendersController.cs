@@ -1,4 +1,5 @@
 ﻿using LR2_Malyshok.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +28,8 @@ namespace LR2_Malyshok.Controllers
         }
 
         [HttpGet]
+        [Authorize]
+        //[Authorize(Roles = "admin")]
         public async Task<ActionResult<IEnumerable<String>>> GetTendersSorted()
         {
             var tendersorted = await _context.Tender.OrderBy(t => t.TenderBudget).Select(t => t.TenderName).ToListAsync();
@@ -36,7 +39,17 @@ namespace LR2_Malyshok.Controllers
             }
             return tendersorted;
         }
-
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Tender>>> GetTendersName(string Name)
+        {
+            var tendername = await _context.Tender.Where(t => t.TenderName == Name).ToListAsync();
+            if (tendername == null)
+            {
+                return NotFound();
+            }
+            return tendername;
+        }
         [HttpGet("{id}")]
         public IActionResult GetWinner(int id)
         {

@@ -1,15 +1,17 @@
 
 using LR2_Malyshok.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace LR2_Malyshok
 {
     public class Program
     {
+
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
 
             builder.Services.AddDbContext<TendersDataContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("TendersDataContext")));
@@ -19,9 +21,25 @@ namespace LR2_Malyshok
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = AuthOptions.Issuer,
 
+                    ValidateAudience = true,
+                    ValidAudience = AuthOptions.Audience,
+
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = AuthOptions.SigningKey,
+
+                    ValidateLifetime = true,
+                };
+            }
+               );
             var app = builder.Build();
-
+            
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -31,12 +49,13 @@ namespace LR2_Malyshok
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 
             app.Run();
+               
+            }
         }
     }
-}

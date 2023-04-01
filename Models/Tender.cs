@@ -12,7 +12,7 @@ namespace LR2_Malyshok.Models
         public DateTime TenderEnd { get; set; }
         public float TenderBudget { get; set; }
         public int OwnerId { get; set; }
-        public virtual ICollection<Tendering> Tenderings { get; set; }
+        public ICollection<Tendering> Tenderings { get; set; }
 
 
         public int SelectWinner()
@@ -46,5 +46,20 @@ namespace LR2_Malyshok.Models
             ICollection<Tendering> Tenderings =  new List<Tendering>();
             return tender;
         }
+        public void ExtendTenderPeriod(int days)
+        {
+            TenderEnd = TenderEnd.AddDays(days);
+        }
+
+        public void UpdateBudget(float amount)
+        {
+            if (amount <= 0)
+            {
+                throw new ArgumentException("Amount must be greater than 0");
+            }
+
+            TenderBudget += amount;
+        }
+
     }
 }

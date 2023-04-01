@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using static LR2_Malyshok.Models.DTOClasses;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace LR2_Malyshok.Controllers
 {
@@ -49,30 +50,17 @@ namespace LR2_Malyshok.Controllers
         [Route("{id}")]
         public async Task<ActionResult<IEnumerable<Tender>>> GetCompanyTenders(int id)
         {
-            var companyTenders = await _context.Tender.Where(t => t.OwnerId == id).ToListAsync();
+            var company = await _context.Company.Include(t => t.CompanyTenders).FirstOrDefaultAsync(c => c.CompanyId == id);
+            //var companyTenders = await _context.Tender.Where(t => t.OwnerId == id).ToListAsync();
 
-            if (companyTenders == null)
+            if (company == null)
             {
                 return NotFound();
             }
-
-            return companyTenders;
+            var companyTenders = company.CompanyTenders;
+            return Ok(companyTenders);
         }
 
-        [HttpGet]
-        [Route("{Name}")]
-        public async Task<ActionResult<IEnumerable<Company>>> GetCompanyStartsWith(String name)
-        {
-            //var companyNames = await _context.Company.Where(c => c.CompanyName.StartsWith(name)).Select(c => c.CompanyName).ToListAsync();
-            var companyNames = await _context.Company.Where(c => c.CompanyName == name).ToListAsync();
-
-            if (companyNames == null)
-            {
-                return NotFound();
-            }
-
-            return companyNames;
-        }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<String>>> GetCompanyNames()

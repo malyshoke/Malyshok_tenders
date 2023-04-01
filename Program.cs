@@ -3,6 +3,7 @@ using LR2_Malyshok.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Text.Json.Serialization;
 
 namespace LR2_Malyshok
 {
@@ -17,6 +18,10 @@ namespace LR2_Malyshok
                 options.UseSqlServer(builder.Configuration.GetConnectionString("TendersDataContext")));
             // Add services to the container.
 
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            });
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

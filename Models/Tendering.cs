@@ -15,7 +15,7 @@
             }
             else
             {
-                
+                throw new ArgumentException("The bid must be less than the previous bid");
             }
         }
 

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static LR2_Malyshok.Models.DTOClasses;
 
 namespace LR2_Malyshok.Controllers
 {
@@ -28,7 +29,7 @@ namespace LR2_Malyshok.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         //[Authorize(Roles = "admin")]
         public async Task<ActionResult<IEnumerable<String>>> GetTendersSorted()
         {
@@ -40,10 +41,10 @@ namespace LR2_Malyshok.Controllers
             return tendersorted;
         }
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult<IEnumerable<Tender>>> GetTendersName(string Name)
         {
-            var tendername = await _context.Tender.Where(t => t.TenderName == Name).ToListAsync();
+            var tendername = await _context.Tender.Where(t => t.TenderName.StartsWith(Name)).ToListAsync();
             if (tendername == null)
             {
                 return NotFound();
@@ -51,25 +52,22 @@ namespace LR2_Malyshok.Controllers
             return tendername;
         }
         [HttpGet("{id}")]
-        public IActionResult GetWinner(int id)
+        public async Task<ActionResult<CompanyDto>> GetWinner(int id)
         {
-            var tender = _context.Tender.FirstOrDefault(t => t.TenderId == id);
+            var tender = await _context.Tender.FindAsync(id);
             if (tender == null)
             {
                 return NotFound();
             }
-            var winnerId = tender.SelectWinner();
-            if (winnerId == 0)
+            var winningTendering = await _context.Tendering.Where(t => t.TenderId == id).OrderBy(t => t.CurrentBid).FirstOrDefaultAsync();
+            if (winningTendering == null)
             {
                 return NotFound();
             }
-            var winner = tender.Tenderings.FirstOrDefault(t => t.CompanyId == winnerId);
-            if (winner == null)
-            {
-                return NotFound();
-            }
-            return Ok(winner);
+            var winner = await _context.Company.FindAsync(winningTendering.CompanyId);
+            return (CompanyDto)winner;
         }
+
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Tender>>> GetOpenTenders()
@@ -132,7 +130,63 @@ namespace LR2_Malyshok.Controllers
 
             return NoContent();
         }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ExtendTender(int id, int days)
+        {
+            var tender = await _context.Tender.FindAsync(id);
+            if (id != tender.TenderId)
+            {
+                return BadRequest();
+            }
+            tender.ExtendTenderPeriod(days);
+            //_context.Entry(tender).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TenderExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBudgetTender(int id, float amount)
+        {
+            var tender = await _context.Tender.FindAsync(id);
+            if (tender == null)
+            {
+                return NotFound();
+            }
+            tender.UpdateBudget(amount);
+            //_context.Entry(tender).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TenderExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
         // POST: api/Tenders
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]

@@ -6,10 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LR2_Malyshok.Models;
+using NuGet.Versioning;
 
 namespace LR2_Malyshok.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class TenderingsController : ControllerBase
     {
@@ -47,6 +48,36 @@ namespace LR2_Malyshok.Controllers
             }
 
             return tendering;
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutBet(int id, float bid)
+        {
+            var tendering = await _context.Tendering.FindAsync(id);
+            if (tendering == null)
+            {
+                return NotFound();
+            }
+            tendering.PlaceBet(bid);
+            //_context.Entry(tendering).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TenderingExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
         // PUT: api/Tenderings/5

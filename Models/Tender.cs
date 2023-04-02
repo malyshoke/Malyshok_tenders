@@ -13,7 +13,7 @@ namespace LR2_Malyshok.Models
         public DateTime TenderEnd { get; set; }
         public float TenderBudget { get; set; }
         public int CompanyId { get; set; }
-        public ICollection<Tendering> Tenderings { get; set; }
+        public ICollection<Tendering> Tenderings { get; set; } = new List<Tendering>();
 
         public Company Company { get; set; }
 

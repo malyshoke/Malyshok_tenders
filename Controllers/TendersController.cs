@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using static LR2_Malyshok.Models.DTOClasses;
 
 namespace LR2_Malyshok.Controllers
@@ -29,8 +30,7 @@ namespace LR2_Malyshok.Controllers
         }
 
         [HttpGet]
-        //[Authorize]
-        //[Authorize(Roles = "admin")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<String>>> GetTendersSorted()
         {
             var tendersorted = await _context.Tender.OrderBy(t => t.TenderBudget).Select(t => t.TenderName).ToListAsync();
@@ -41,10 +41,10 @@ namespace LR2_Malyshok.Controllers
             return tendersorted;
         }
         [HttpGet]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Tender>>> GetTendersName(string Name)
         {
-            var tendername = await _context.Tender.Where(t => t.TenderName.StartsWith(Name)).ToListAsync();
+            var tendername = await _context.Tender.Where(t => t.TenderName.Contains(Name)).ToListAsync();
             if (tendername == null)
             {
                 return NotFound();
@@ -102,6 +102,7 @@ namespace LR2_Malyshok.Controllers
         // PUT: api/Tenders/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> PutTender(int id, Tender tender)
         {
             if (id != tender.TenderId)

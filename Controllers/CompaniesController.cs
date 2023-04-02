@@ -1,8 +1,10 @@
 ﻿using LR2_Malyshok.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using static LR2_Malyshok.Models.DTOClasses;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LR2_Malyshok.Controllers
 {
@@ -62,6 +64,7 @@ namespace LR2_Malyshok.Controllers
 
         [HttpGet]
         [Route("{id}")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Tender>>> GetCompanyTendersByBudget(int id, float budget)
         {
             var company = await _context.Company.Include(t => t.CompanyTenders).FirstOrDefaultAsync(c => c.CompanyId == id);
@@ -122,6 +125,7 @@ namespace LR2_Malyshok.Controllers
         // PUT: api/Companies/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> PutCompany(int id, Company company)
         {
             if (id != company.CompanyId)

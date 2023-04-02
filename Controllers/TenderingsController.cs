@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LR2_Malyshok.Models;
 using NuGet.Versioning;
+using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LR2_Malyshok.Controllers
 {
@@ -83,6 +85,7 @@ namespace LR2_Malyshok.Controllers
         // PUT: api/Tenderings/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> PutTendering(int id, Tendering tendering)
         {
             if (id != tendering.TenderingId)

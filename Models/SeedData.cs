@@ -51,7 +51,7 @@ namespace LR2_Malyshok.Models
                         TenderStart = DateTime.Parse("2023-06-03"),
                         TenderEnd = DateTime.Parse("2023-20-03"),
                         TenderBudget = 100,
-                        OwnerId = 1
+                        CompanyId = 1
                     }
                 );
 

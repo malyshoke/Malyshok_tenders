@@ -6,7 +6,8 @@
         public float CurrentBid { get; set; }
         public int TenderId { get; set; }
         public int CompanyId { get; set; }
-
+        public Company Company { get; set; }
+        public  Tender Tender { get; set; }
         public void PlaceBet(float NewBid)
         {
             if (CurrentBid > NewBid)

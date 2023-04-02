@@ -1,4 +1,5 @@
 ﻿using NuGet.Versioning;
+using System.Drawing.Printing;
 using System.Security.Cryptography;
 using static LR2_Malyshok.Models.DTOClasses;
 
@@ -11,9 +12,10 @@ namespace LR2_Malyshok.Models
         public DateTime TenderStart { get; set; }
         public DateTime TenderEnd { get; set; }
         public float TenderBudget { get; set; }
-        public int OwnerId { get; set; }
+        public int CompanyId { get; set; }
         public ICollection<Tendering> Tenderings { get; set; }
 
+        public Company Company { get; set; }
 
         public int SelectWinner()
         {
@@ -40,7 +42,7 @@ namespace LR2_Malyshok.Models
             Tender tender = new Tender();
             tender.TenderId = tenderdto.TenderId;
             tender.TenderName = tenderdto.TenderName;
-            tender.OwnerId= tenderdto.OwnerId;
+            tender.CompanyId= tenderdto.CompanyId;
             tender.TenderStart = tenderdto.TenderStart;
             tender.TenderBudget = tenderdto.TenderBudget;
             ICollection<Tendering> Tenderings =  new List<Tendering>();

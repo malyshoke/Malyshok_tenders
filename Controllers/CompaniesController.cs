@@ -51,7 +51,7 @@ namespace LR2_Malyshok.Controllers
         public async Task<ActionResult<IEnumerable<Tender>>> GetCompanyTenders(int id)
         {
             var company = await _context.Company.Include(t => t.CompanyTenders).FirstOrDefaultAsync(c => c.CompanyId == id);
-            //var companyTenders = await _context.Tender.Where(t => t.OwnerId == id).ToListAsync();
+            //var companyTenders = await _context.Tender.Where(t => t.CompanyId == id).ToListAsync();
 
             if (company == null)
             {

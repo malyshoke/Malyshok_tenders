@@ -33,7 +33,7 @@ namespace LR2_Malyshok.Models
         public DateTime TenderStart { get; set; }
         public DateTime TenderEnd { get; set; }
         public float TenderBudget { get; set; }
-        public int OwnerId { get; set; }
+        public int CompanyId { get; set; }
 
         public static explicit operator TenderDto(Tender tender)
         {
@@ -41,7 +41,7 @@ namespace LR2_Malyshok.Models
             tenderDto.TenderId = tender.TenderId;
             tenderDto.TenderName= tender.TenderName;
             tenderDto.TenderBudget = tender.TenderBudget;
-            tenderDto.OwnerId = tender.OwnerId;
+            tenderDto.CompanyId = tender.CompanyId;
             tenderDto.TenderEnd = tender.TenderEnd;
             tenderDto.TenderStart = tender.TenderStart;
             return tenderDto;

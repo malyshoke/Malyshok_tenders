@@ -19,6 +19,17 @@
                 throw new ArgumentException("The bid must be less than the previous bid");
             }
         }
+        public static explicit operator Tendering(TenderingDto tenderingdto)
+        {
+            Tendering tendering = new Tendering();
+            tendering.TenderingId = tenderingdto.TenderingId;
+            tendering.TenderId = tenderingdto.TenderId;
+            tendering.CurrentBid = tenderingdto.CurrentBid;
+            tendering.CompanyId = tenderingdto.CompanyId;
+            return tendering;
+
+        }
+
 
     }
 }

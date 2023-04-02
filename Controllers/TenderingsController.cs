@@ -25,29 +25,29 @@ namespace LR2_Malyshok.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Tendering>>> GetTendering()
         {
-          if (_context.Tendering == null)
-          {
-              return NotFound();
-          }
+            if (_context.Tendering == null)
+            {
+                return NotFound();
+            }
             return await _context.Tendering.ToListAsync();
         }
 
         // GET: api/Tenderings/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Tendering>> GetTendering(int id)
+        public async Task<ActionResult<TenderingDto>> GetTendering(int id)
         {
-          if (_context.Tendering == null)
-          {
-              return NotFound();
-          }
+            if (_context.Tendering == null)
+            {
+                return NotFound();
+            }
             var tendering = await _context.Tendering.FindAsync(id);
 
             if (tendering == null)
             {
                 return NotFound();
             }
-
-            return tendering;
+            TenderingDto tenderingDto = (TenderingDto)tendering;
+            return tenderingDto;
         }
 
         [HttpPut("{id}")]
@@ -114,14 +114,33 @@ namespace LR2_Malyshok.Controllers
         // POST: api/Tenderings
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Tendering>> PostTendering(Tendering tendering)
+        public async Task<ActionResult<Tendering>> PostTendering(TenderingDto tenderingdto)
         {
-          if (_context.Tendering == null)
-          {
-              return Problem("Entity set 'TendersDataContext.Tendering'  is null.");
-          }
+            if (_context.Tendering == null)
+            {
+                return Problem("Entity set 'TendersDataContext.Tendering'  is null.");
+            }
+            Tendering tendering = (Tendering)tenderingdto;
+            var company = await _context.Company.FindAsync(tendering.CompanyId);
+            if (company == null)
+            {
+                return NotFound();
+            }
+            tendering.Company = company;
+            company.PartInTendering(tendering);
+            var tender = await _context.Tender.FindAsync(tendering.TenderId);
+            if (tender == null)
+            {
+                return NotFound();
+            }
+            tendering.Tender = tender;
+            tender.AddTendering(tendering);
             _context.Tendering.Add(tendering);
             await _context.SaveChangesAsync();
+            if (tendering.CurrentBid > tender.TenderBudget)
+            {
+                return Problem("Entity set 'TendersDataContext.Tendering'  is null.");
+            }
 
             return CreatedAtAction("GetTendering", new { id = tendering.TenderingId }, tendering);
         }
@@ -139,7 +158,10 @@ namespace LR2_Malyshok.Controllers
             {
                 return NotFound();
             }
-
+            var company = await _context.Company.FindAsync(tendering.CompanyId);
+            company.CancelTendering(tendering);
+            var tender = await _context.Tender.FindAsync(tendering.TenderId);
+            tender.RemoveTendering(tendering);
             _context.Tendering.Remove(tendering);
             await _context.SaveChangesAsync();
 

@@ -39,7 +39,7 @@ namespace LR2_Malyshok.Models
         {
             TenderDto tenderDto = new TenderDto();
             tenderDto.TenderId = tender.TenderId;
-            tenderDto.TenderName= tender.TenderName;
+            tenderDto.TenderName = tender.TenderName;
             tenderDto.TenderBudget = tender.TenderBudget;
             tenderDto.CompanyId = tender.CompanyId;
             tenderDto.TenderEnd = tender.TenderEnd;
@@ -54,5 +54,15 @@ namespace LR2_Malyshok.Models
         public float CurrentBid { get; set; }
         public int TenderId { get; set; }
         public int CompanyId { get; set; }
+
+        public static explicit operator TenderingDto(Tendering tendering)
+        {
+            TenderingDto tenderingDto = new TenderingDto();
+            tenderingDto.TenderingId = tendering.TenderingId;
+            tenderingDto.TenderId = tendering.TenderId;
+            tenderingDto.CurrentBid = tendering.CurrentBid;
+            tenderingDto.CompanyId = tendering.CompanyId;
+            return tenderingDto;
+        }
     }
-    }
+}

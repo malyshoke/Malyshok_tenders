@@ -17,6 +17,14 @@ namespace LR2_Malyshok.Models
 
         public Company Company { get; set; }
 
+        public void AddTendering(Tendering tendering)
+        {
+            Tenderings.Add(tendering);
+        }
+        public void RemoveTendering(Tendering tendering)
+        {
+            Tenderings.Remove(tendering);
+        }
         public int SelectWinner()
         {
             if (Tenderings.Count == 0 || Tenderings == null)

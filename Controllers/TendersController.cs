@@ -84,7 +84,7 @@ namespace LR2_Malyshok.Controllers
 
         // GET: api/Tenders/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Tender>> GetTender(int id)
+        public async Task<ActionResult<TenderDto>> GetTender(int id)
         {
             if (_context.Tender == null)
             {
@@ -96,8 +96,7 @@ namespace LR2_Malyshok.Controllers
             {
                 return NotFound();
             }
-
-            return tender;
+            return (TenderDto)tender;
         }
 
         // PUT: api/Tenders/5
@@ -130,7 +129,7 @@ namespace LR2_Malyshok.Controllers
 
             return NoContent();
         }
-        [HttpPut("{id}")]
+        [HttpPut("{id},{days}")]
         public async Task<IActionResult> ExtendTender(int id, int days)
         {
             var tender = await _context.Tender.FindAsync(id);
@@ -139,7 +138,6 @@ namespace LR2_Malyshok.Controllers
                 return BadRequest();
             }
             tender.ExtendTenderPeriod(days);
-            //_context.Entry(tender).State = EntityState.Modified;
             try
             {
                 await _context.SaveChangesAsync();
@@ -168,7 +166,6 @@ namespace LR2_Malyshok.Controllers
                 return NotFound();
             }
             tender.UpdateBudget(amount);
-            //_context.Entry(tender).State = EntityState.Modified;
             try
             {
                 await _context.SaveChangesAsync();
@@ -198,6 +195,12 @@ namespace LR2_Malyshok.Controllers
             }
             Tender tender = new Tender();
             tender = (Tender)tenderdto;
+            var company = await _context.Company.FindAsync(tender.CompanyId);
+            if (company == null)
+            {
+                return NotFound();
+            }
+            company.AddTender(tender);
             _context.Tender.Add(tender);
             await _context.SaveChangesAsync();
 
@@ -217,7 +220,12 @@ namespace LR2_Malyshok.Controllers
             {
                 return NotFound();
             }
-
+            var company = await _context.Company.FindAsync(tender.CompanyId);
+            if (company == null)
+            {
+                return NotFound();
+            }
+            company.DeleteTender(tender);
             _context.Tender.Remove(tender);
             await _context.SaveChangesAsync();
 

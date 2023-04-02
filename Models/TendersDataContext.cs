@@ -15,7 +15,7 @@ namespace LR2_Malyshok.Models
             public DbSet<LR2_Malyshok.Models.Company> Company { get; set; } = default!;
             public DbSet<LR2_Malyshok.Models.Tender> Tender { get; set; } = default!;
             public DbSet<LR2_Malyshok.Models.Tendering> Tendering { get; set; } = default!;
-        //
+      
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Tendering>()

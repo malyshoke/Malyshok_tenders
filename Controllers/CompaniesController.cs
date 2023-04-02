@@ -48,17 +48,45 @@ namespace LR2_Malyshok.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult<IEnumerable<Tender>>> GetCompanyTenders(int id)
+        public async Task<ActionResult<IEnumerable<Tender>>> GetCompanyTendersInclude(int id)
         {
             var company = await _context.Company.Include(t => t.CompanyTenders).FirstOrDefaultAsync(c => c.CompanyId == id);
-            //var companyTenders = await _context.Tender.Where(t => t.CompanyId == id).ToListAsync();
-
             if (company == null)
             {
                 return NotFound();
             }
+
             var companyTenders = company.CompanyTenders;
             return Ok(companyTenders);
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<ActionResult<IEnumerable<Tender>>> GetCompanyTendersByBudget(int id, float budget)
+        {
+            var company = await _context.Company.Include(t => t.CompanyTenders).FirstOrDefaultAsync(c => c.CompanyId == id);
+            if (company == null)
+            {
+                return NotFound();
+            }
+
+            var companyTenders = company.CompanyTenders.Where(t => t.TenderBudget < budget);
+            return Ok(companyTenders);
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<ActionResult<IEnumerable<Tender>>> GetCompanyTenders(int id)
+        {
+            var companyTenders = await _context.Tender.Where(t => t.CompanyId == id).ToListAsync();
+            if (companyTenders == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return companyTenders;
+            }
         }
 
 
@@ -122,20 +150,6 @@ namespace LR2_Malyshok.Controllers
             return NoContent();
         }
 
-        // POST: api/Companies
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPost]
-        //public async Task<ActionResult<Company>> PostCompany(Company company)
-        //{
-        //  if (_context.Company == null)
-        //  {
-        //      return Problem("Entity set 'TendersDataContext.Company'  is null.");
-        //  }
-        //    _context.Company.Add(company);
-        //    await _context.SaveChangesAsync();
-
-        //    return CreatedAtAction("GetCompany", new { id = company.CompanyId }, company);
-        //}
 
         [HttpPost]
         public async Task<ActionResult<Company>> PostCompany(CompanyDto companydto)

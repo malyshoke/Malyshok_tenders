@@ -52,6 +52,7 @@ namespace LR2_Malyshok.Models
             tender.TenderName = tenderdto.TenderName;
             tender.CompanyId= tenderdto.CompanyId;
             tender.TenderStart = tenderdto.TenderStart;
+            tender.TenderStart = tenderdto.TenderEnd;
             tender.TenderBudget = tenderdto.TenderBudget;
             ICollection<Tendering> Tenderings =  new List<Tendering>();
             return tender;

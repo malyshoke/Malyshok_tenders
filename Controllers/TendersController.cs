@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using static LR2_Malyshok.Models.DTOClasses;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace LR2_Malyshok.Controllers
 {
@@ -97,6 +98,30 @@ namespace LR2_Malyshok.Controllers
                 return NotFound();
             }
             return (TenderDto)tender;
+        }
+
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<object>> GetTenderingByTender(int id)
+        {
+            if (_context.Tender == null)
+            {
+                return NotFound();
+            }
+            var tender = await _context.Tender
+                .Include(t => t.Tenderings)
+                .ThenInclude(t => t.Company)
+                .FirstOrDefaultAsync(t => t.TenderId == id);
+
+            if (tender == null)
+            {
+                return NotFound();
+            }
+            return Ok(tender?.Tenderings.Select(t=>new { 
+                company_id = t.CompanyId,
+                company = t.Company.CompanyName,
+                bid = t.CurrentBid
+            }));
         }
 
         // PUT: api/Tenders/5
@@ -194,8 +219,7 @@ namespace LR2_Malyshok.Controllers
             {
                 return Problem("Entity set 'TendersDataContext.Tender'  is null.");
             }
-            Tender tender = new Tender();
-            tender = (Tender)tenderdto;
+            var tender = (Tender)tenderdto;
             var company = await _context.Company.FindAsync(tender.CompanyId);
             if (company == null)
             {

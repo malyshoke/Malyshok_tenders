@@ -50,6 +50,18 @@ namespace LR2_Malyshok.Controllers
 
         [HttpGet]
         [Route("{id}")]
+        public async Task<ActionResult<IEnumerable<Tender>>> GetCompanyTendersTenderings(int id)
+        {
+            var company = await _context.Company.Include(t => t.CompanyTenders).ThenInclude(t => t.Tenderings).FirstOrDefaultAsync(c => c.CompanyId == id);
+            if (company == null)
+            {
+                return NotFound();
+            }
+            return Ok(company);
+        }
+
+        [HttpGet]
+        [Route("{id}")]
         public async Task<ActionResult<IEnumerable<Tender>>> GetCompanyTendersInclude(int id)
         {
             var company = await _context.Company.Include(t => t.CompanyTenders).FirstOrDefaultAsync(c => c.CompanyId == id);
@@ -78,19 +90,33 @@ namespace LR2_Malyshok.Controllers
         }
 
         [HttpGet]
-        [Route("{id}")]
-        public async Task<ActionResult<IEnumerable<Tender>>> GetCompanyTenders(int id)
+        [Route("{name}")]
+        public async Task<ActionResult<IEnumerable<Tender>>> GetCompanyTendersByName(string name)
         {
-            var companyTenders = await _context.Tender.Where(t => t.CompanyId == id).ToListAsync();
-            if (companyTenders == null)
+            var company = await _context.Company.Include(t => t.CompanyTenders).Where(c => c.CompanyName.Contains(name)).FirstOrDefaultAsync();
+            if (company == null)
             {
                 return NotFound();
             }
-            else
-            {
-                return companyTenders;
-            }
+
+            var companyTenders = company.CompanyTenders;
+            return Ok(companyTenders);
         }
+
+        //[HttpGet]
+        //[Route("{id}")]
+        //public async Task<ActionResult<IEnumerable<Tender>>> GetCompanyTenders(int id)
+        //{
+        //    var companyTenders = await _context.Tender.Where(t => t.CompanyId == id).ToListAsync();
+        //    if (companyTenders == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    else
+        //    {
+        //        return companyTenders;
+        //    }
+        //}
 
 
         [HttpGet]
